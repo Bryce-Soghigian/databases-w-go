@@ -1,26 +1,23 @@
 package main
 
 import (
-	"fmt"
-	"log"
 	"net/http"
 
-	"github.com/gorilla/mux"
-	// "net/http"
-	// "github.com/jinzhu/gorm"
-	// _ "github.com/jinzhu/gorm/dialects/sqlite"
+	"github.com/gin-gonic/gin"
 )
 
-
-func get(w http.ResponseWriter, r *http.Request){
-	w.Header().Set("Content-Type","application/json")
+func get(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte(`{"status":"up"}`))
 }
-func main(){
-	router := mux.NewRouter()
-	router.HandleFunc("/",get).Methods(http.MethodGet)
-	PORT := ":8080"
-	fmt.Println("//======Server is running on port",PORT)
-	log.Fatal(http.ListenAndServe(PORT,router))
+
+func main() {
+	r := gin.Default()
+
+	r.GET("/", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{"data": "hello world"})
+	})
+
+	r.Run()
 }
