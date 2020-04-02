@@ -6,12 +6,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// func get(w http.ResponseWriter, r *http.Request) {
-// 	w.Header().Set("Content-Type", "application/json")
-// 	w.WriteHeader(http.StatusOK)
-// 	w.Write([]byte(`{"status":"up"}`))
-// }
-
 func main() {
 	r := gin.Default()
 
@@ -26,6 +20,7 @@ func main() {
 	r.POST("/books", controllers.CreateBook)
 	r.GET("/books/:id", controllers.FindBookById)
 	r.PATCH("/books/:id", controllers.PatchBook)
-
+	r.DELETE("/books/:id", controllers.DeleteBook)
 	r.Run()
+
 }
