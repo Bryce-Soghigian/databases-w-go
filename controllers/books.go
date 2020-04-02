@@ -13,6 +13,12 @@ type CreateBookInput struct {
 	Author string `json:"author" binding:"required"`
 }
 
+//This is the update book struct bb.
+type UpdateBookInput struct {
+	Title  string `json:"title"`
+	Author string `json:"author"`
+}
+
 func CreateBook(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
 
@@ -49,4 +55,21 @@ func FindBookById(c *gin.Context) {
 		return
 	}
 	c.JSON((http.StatusOK), gin.H{"data": book})
+}
+
+func PatchBook(c *gin.Context) {
+	db := c.MustGet("db").(*gorm.DB)
+	var book models.Book
+	if err := db.Where("id = ?", c.Param("id")).First(&book).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found!"})
+		return
+	}
+	//input
+	var input UpdateBookInput
+	if err := c.ShouldBindJSON(&input); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	db.Model(&book).Updates(input)
+	c.JSON(http.StatusOK, gin.H{"data": book})
 }
