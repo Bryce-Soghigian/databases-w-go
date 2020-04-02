@@ -23,5 +23,6 @@ func main() {
 	})
 
 	r.GET("/books", controllers.FindBooks)
+	r.POST("/books", controllers.CreateBook)
 	r.Run()
 }
