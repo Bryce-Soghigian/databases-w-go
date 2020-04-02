@@ -30,9 +30,23 @@ func CreateBook(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": book})
 }
 
+// GET /books
 func FindBooks(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
 	var books []models.Book
 	db.Find(&books)
 	c.JSON(http.StatusOK, gin.H{"data": books})
+}
+
+// GET /books/:id
+func FindBookById(c *gin.Context) {
+	db := c.MustGet("db").(*gorm.DB)
+
+	//fetch book model if it exists
+	var book models.Book
+	if err := db.Where("id=?", c.Param("id")).First(&book).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not in there boi"})
+		return
+	}
+	c.JSON((http.StatusOK), gin.H{"data": book})
 }
